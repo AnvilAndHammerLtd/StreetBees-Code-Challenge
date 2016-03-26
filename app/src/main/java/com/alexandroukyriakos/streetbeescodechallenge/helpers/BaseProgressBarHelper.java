@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.alexandroukyriakos.streetbeescodechallenge.R;
-import com.alexandroukyriakos.streetbeescodechallenge.Util;
+import com.alexandroukyriakos.streetbeescodechallenge.UiUtil;
 
 /**
  * Abstract base class for common progress bar logic
@@ -51,7 +51,7 @@ public abstract class BaseProgressBarHelper {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View progressBarContainer = inflateProgressBarView(layoutInflater, progressBarSize);
 
-        ViewGroup layout = Util.getRootView(context);
+        ViewGroup layout = UiUtil.getRootView(context);
         layout.addView(progressBarContainer);
 
         return progressBarContainer;

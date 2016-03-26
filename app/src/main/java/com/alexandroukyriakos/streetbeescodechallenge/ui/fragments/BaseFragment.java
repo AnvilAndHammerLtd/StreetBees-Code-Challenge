@@ -1,4 +1,4 @@
-package com.alexandroukyriakos.streetbeescodechallenge.ui.activities.fragments;
+package com.alexandroukyriakos.streetbeescodechallenge.ui.fragments;
 
 import android.support.v4.app.Fragment;
 
@@ -7,9 +7,6 @@ import com.alexandroukyriakos.streetbeescodechallenge.helpers.BaseProgressBarHel
 public class BaseFragment extends Fragment {
     private static final String TAG = BaseFragment.class.getName();
     private BaseProgressBarHelper mProgressBarHelper;
-
-    public BaseFragment() {
-    }
 
     protected BaseProgressBarHelper getProgressBarHelper() {
         return mProgressBarHelper;

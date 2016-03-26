@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
-public class Item__ extends Item___ {
+public class ItemWithType extends ItemBase {
     @SerializedName("type")
     @Expose
     private String type;

@@ -1,11 +1,13 @@
 
 package com.alexandroukyriakos.streetbeescodechallenge.models;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class Data {
@@ -24,96 +26,76 @@ public class Data {
     private String count;
     @SerializedName("results")
     @Expose
-    private List<Result> results = new ArrayList<Result>();
+    private List<Comic> comics = new ArrayList<Comic>();
 
     /**
-     * 
-     * @return
-     *     The offset
+     * @return The offset
      */
     public String getOffset() {
         return offset;
     }
 
     /**
-     * 
-     * @param offset
-     *     The offset
+     * @param offset The offset
      */
     public void setOffset(String offset) {
         this.offset = offset;
     }
 
     /**
-     * 
-     * @return
-     *     The limit
+     * @return The limit
      */
     public String getLimit() {
         return limit;
     }
 
     /**
-     * 
-     * @param limit
-     *     The limit
+     * @param limit The limit
      */
     public void setLimit(String limit) {
         this.limit = limit;
     }
 
     /**
-     * 
-     * @return
-     *     The total
+     * @return The total
      */
     public String getTotal() {
         return total;
     }
 
     /**
-     * 
-     * @param total
-     *     The total
+     * @param total The total
      */
     public void setTotal(String total) {
         this.total = total;
     }
 
     /**
-     * 
-     * @return
-     *     The count
+     * @return The count
      */
     public String getCount() {
         return count;
     }
 
     /**
-     * 
-     * @param count
-     *     The count
+     * @param count The count
      */
     public void setCount(String count) {
         this.count = count;
     }
 
     /**
-     * 
-     * @return
-     *     The results
+     * @return The comics
      */
-    public List<Result> getResults() {
-        return results;
+    public List<Comic> getComics() {
+        return comics;
     }
 
     /**
-     * 
-     * @param results
-     *     The results
+     * @param comics The comics
      */
-    public void setResults(List<Result> results) {
-        this.results = results;
+    public void setComics(List<Comic> comics) {
+        this.comics = comics;
     }
 
 }

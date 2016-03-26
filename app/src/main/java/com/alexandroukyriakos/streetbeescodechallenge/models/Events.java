@@ -3,7 +3,9 @@ package com.alexandroukyriakos.streetbeescodechallenge.models;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.annotation.Generated;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -21,77 +23,61 @@ public class Events {
     private String collectionURI;
     @SerializedName("items")
     @Expose
-    private List<Item___> items = new ArrayList<Item___>();
+    private List<ItemBase> items = new ArrayList<ItemBase>();
 
     /**
-     * 
-     * @return
-     *     The available
+     * @return The available
      */
     public String getAvailable() {
         return available;
     }
 
     /**
-     * 
-     * @param available
-     *     The available
+     * @param available The available
      */
     public void setAvailable(String available) {
         this.available = available;
     }
 
     /**
-     * 
-     * @return
-     *     The returned
+     * @return The returned
      */
     public String getReturned() {
         return returned;
     }
 
     /**
-     * 
-     * @param returned
-     *     The returned
+     * @param returned The returned
      */
     public void setReturned(String returned) {
         this.returned = returned;
     }
 
     /**
-     * 
-     * @return
-     *     The collectionURI
+     * @return The collectionURI
      */
     public String getCollectionURI() {
         return collectionURI;
     }
 
     /**
-     * 
-     * @param collectionURI
-     *     The collectionURI
+     * @param collectionURI The collectionURI
      */
     public void setCollectionURI(String collectionURI) {
         this.collectionURI = collectionURI;
     }
 
     /**
-     * 
-     * @return
-     *     The items
+     * @return The items
      */
-    public List<Item___> getItems() {
+    public List<ItemBase> getItems() {
         return items;
     }
 
     /**
-     * 
-     * @param items
-     *     The items
+     * @param items The items
      */
-    public void setItems(List<Item___> items) {
+    public void setItems(List<ItemBase> items) {
         this.items = items;
     }
 

@@ -1,14 +1,16 @@
 
 package com.alexandroukyriakos.streetbeescodechallenge.models;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Generated;
+
 @Generated("org.jsonschema2pojo")
-public class Result {
+public class Comic {
 
     @SerializedName("id")
     @Expose
@@ -99,522 +101,406 @@ public class Result {
     private Events events;
 
     /**
-     * 
-     * @return
-     *     The id
+     * @return The id
      */
     public String getId() {
         return id;
     }
 
     /**
-     * 
-     * @param id
-     *     The id
+     * @param id The id
      */
     public void setId(String id) {
         this.id = id;
     }
 
     /**
-     * 
-     * @return
-     *     The digitalId
+     * @return The digitalId
      */
     public String getDigitalId() {
         return digitalId;
     }
 
     /**
-     * 
-     * @param digitalId
-     *     The digitalId
+     * @param digitalId The digitalId
      */
     public void setDigitalId(String digitalId) {
         this.digitalId = digitalId;
     }
 
     /**
-     * 
-     * @return
-     *     The title
+     * @return The title
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     * 
-     * @param title
-     *     The title
+     * @param title The title
      */
     public void setTitle(String title) {
         this.title = title;
     }
 
     /**
-     * 
-     * @return
-     *     The issueNumber
+     * @return The issueNumber
      */
     public String getIssueNumber() {
         return issueNumber;
     }
 
     /**
-     * 
-     * @param issueNumber
-     *     The issueNumber
+     * @param issueNumber The issueNumber
      */
     public void setIssueNumber(String issueNumber) {
         this.issueNumber = issueNumber;
     }
 
     /**
-     * 
-     * @return
-     *     The variantDescription
+     * @return The variantDescription
      */
     public String getVariantDescription() {
         return variantDescription;
     }
 
     /**
-     * 
-     * @param variantDescription
-     *     The variantDescription
+     * @param variantDescription The variantDescription
      */
     public void setVariantDescription(String variantDescription) {
         this.variantDescription = variantDescription;
     }
 
     /**
-     * 
-     * @return
-     *     The description
+     * @return The description
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * 
-     * @param description
-     *     The description
+     * @param description The description
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
     /**
-     * 
-     * @return
-     *     The modified
+     * @return The modified
      */
     public String getModified() {
         return modified;
     }
 
     /**
-     * 
-     * @param modified
-     *     The modified
+     * @param modified The modified
      */
     public void setModified(String modified) {
         this.modified = modified;
     }
 
     /**
-     * 
-     * @return
-     *     The isbn
+     * @return The isbn
      */
     public String getIsbn() {
         return isbn;
     }
 
     /**
-     * 
-     * @param isbn
-     *     The isbn
+     * @param isbn The isbn
      */
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 
     /**
-     * 
-     * @return
-     *     The upc
+     * @return The upc
      */
     public String getUpc() {
         return upc;
     }
 
     /**
-     * 
-     * @param upc
-     *     The upc
+     * @param upc The upc
      */
     public void setUpc(String upc) {
         this.upc = upc;
     }
 
     /**
-     * 
-     * @return
-     *     The diamondCode
+     * @return The diamondCode
      */
     public String getDiamondCode() {
         return diamondCode;
     }
 
     /**
-     * 
-     * @param diamondCode
-     *     The diamondCode
+     * @param diamondCode The diamondCode
      */
     public void setDiamondCode(String diamondCode) {
         this.diamondCode = diamondCode;
     }
 
     /**
-     * 
-     * @return
-     *     The ean
+     * @return The ean
      */
     public String getEan() {
         return ean;
     }
 
     /**
-     * 
-     * @param ean
-     *     The ean
+     * @param ean The ean
      */
     public void setEan(String ean) {
         this.ean = ean;
     }
 
     /**
-     * 
-     * @return
-     *     The issn
+     * @return The issn
      */
     public String getIssn() {
         return issn;
     }
 
     /**
-     * 
-     * @param issn
-     *     The issn
+     * @param issn The issn
      */
     public void setIssn(String issn) {
         this.issn = issn;
     }
 
     /**
-     * 
-     * @return
-     *     The format
+     * @return The format
      */
     public String getFormat() {
         return format;
     }
 
     /**
-     * 
-     * @param format
-     *     The format
+     * @param format The format
      */
     public void setFormat(String format) {
         this.format = format;
     }
 
     /**
-     * 
-     * @return
-     *     The pageCount
+     * @return The pageCount
      */
     public String getPageCount() {
         return pageCount;
     }
 
     /**
-     * 
-     * @param pageCount
-     *     The pageCount
+     * @param pageCount The pageCount
      */
     public void setPageCount(String pageCount) {
         this.pageCount = pageCount;
     }
 
     /**
-     * 
-     * @return
-     *     The textObjects
+     * @return The textObjects
      */
     public List<TextObject> getTextObjects() {
         return textObjects;
     }
 
     /**
-     * 
-     * @param textObjects
-     *     The textObjects
+     * @param textObjects The textObjects
      */
     public void setTextObjects(List<TextObject> textObjects) {
         this.textObjects = textObjects;
     }
 
     /**
-     * 
-     * @return
-     *     The resourceURI
+     * @return The resourceURI
      */
     public String getResourceURI() {
         return resourceURI;
     }
 
     /**
-     * 
-     * @param resourceURI
-     *     The resourceURI
+     * @param resourceURI The resourceURI
      */
     public void setResourceURI(String resourceURI) {
         this.resourceURI = resourceURI;
     }
 
     /**
-     * 
-     * @return
-     *     The urls
+     * @return The urls
      */
     public List<Url> getUrls() {
         return urls;
     }
 
     /**
-     * 
-     * @param urls
-     *     The urls
+     * @param urls The urls
      */
     public void setUrls(List<Url> urls) {
         this.urls = urls;
     }
 
     /**
-     * 
-     * @return
-     *     The series
+     * @return The series
      */
     public Series getSeries() {
         return series;
     }
 
     /**
-     * 
-     * @param series
-     *     The series
+     * @param series The series
      */
     public void setSeries(Series series) {
         this.series = series;
     }
 
     /**
-     * 
-     * @return
-     *     The variants
+     * @return The variants
      */
     public List<Variant> getVariants() {
         return variants;
     }
 
     /**
-     * 
-     * @param variants
-     *     The variants
+     * @param variants The variants
      */
     public void setVariants(List<Variant> variants) {
         this.variants = variants;
     }
 
     /**
-     * 
-     * @return
-     *     The collections
+     * @return The collections
      */
     public List<Collection> getCollections() {
         return collections;
     }
 
     /**
-     * 
-     * @param collections
-     *     The collections
+     * @param collections The collections
      */
     public void setCollections(List<Collection> collections) {
         this.collections = collections;
     }
 
     /**
-     * 
-     * @return
-     *     The collectedIssues
+     * @return The collectedIssues
      */
     public List<CollectedIssue> getCollectedIssues() {
         return collectedIssues;
     }
 
     /**
-     * 
-     * @param collectedIssues
-     *     The collectedIssues
+     * @param collectedIssues The collectedIssues
      */
     public void setCollectedIssues(List<CollectedIssue> collectedIssues) {
         this.collectedIssues = collectedIssues;
     }
 
     /**
-     * 
-     * @return
-     *     The dates
+     * @return The dates
      */
     public List<Date> getDates() {
         return dates;
     }
 
     /**
-     * 
-     * @param dates
-     *     The dates
+     * @param dates The dates
      */
     public void setDates(List<Date> dates) {
         this.dates = dates;
     }
 
     /**
-     * 
-     * @return
-     *     The prices
+     * @return The prices
      */
     public List<Price> getPrices() {
         return prices;
     }
 
     /**
-     * 
-     * @param prices
-     *     The prices
+     * @param prices The prices
      */
     public void setPrices(List<Price> prices) {
         this.prices = prices;
     }
 
     /**
-     * 
-     * @return
-     *     The thumbnail
+     * @return The thumbnail
      */
     public Thumbnail getThumbnail() {
         return thumbnail;
     }
 
     /**
-     * 
-     * @param thumbnail
-     *     The thumbnail
+     * @param thumbnail The thumbnail
      */
     public void setThumbnail(Thumbnail thumbnail) {
         this.thumbnail = thumbnail;
     }
 
     /**
-     * 
-     * @return
-     *     The images
+     * @return The images
      */
     public List<Image> getImages() {
         return images;
     }
 
     /**
-     * 
-     * @param images
-     *     The images
+     * @param images The images
      */
     public void setImages(List<Image> images) {
         this.images = images;
     }
 
     /**
-     * 
-     * @return
-     *     The creators
+     * @return The creators
      */
     public Creators getCreators() {
         return creators;
     }
 
     /**
-     * 
-     * @param creators
-     *     The creators
+     * @param creators The creators
      */
     public void setCreators(Creators creators) {
         this.creators = creators;
     }
 
     /**
-     * 
-     * @return
-     *     The characters
+     * @return The characters
      */
     public Characters getCharacters() {
         return characters;
     }
 
     /**
-     * 
-     * @param characters
-     *     The characters
+     * @param characters The characters
      */
     public void setCharacters(Characters characters) {
         this.characters = characters;
     }
 
     /**
-     * 
-     * @return
-     *     The stories
+     * @return The stories
      */
     public Stories getStories() {
         return stories;
     }
 
     /**
-     * 
-     * @param stories
-     *     The stories
+     * @param stories The stories
      */
     public void setStories(Stories stories) {
         this.stories = stories;
     }
 
     /**
-     * 
-     * @return
-     *     The events
+     * @return The events
      */
     public Events getEvents() {
         return events;
     }
 
     /**
-     * 
-     * @param events
-     *     The events
+     * @param events The events
      */
     public void setEvents(Events events) {
         this.events = events;

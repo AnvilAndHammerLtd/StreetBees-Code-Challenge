@@ -2,6 +2,7 @@
 package com.alexandroukyriakos.streetbeescodechallenge.models;
 
 import javax.annotation.Generated;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,36 +17,28 @@ public class Price {
     private String price;
 
     /**
-     * 
-     * @return
-     *     The type
+     * @return The type
      */
     public String getType() {
         return type;
     }
 
     /**
-     * 
-     * @param type
-     *     The type
+     * @param type The type
      */
     public void setType(String type) {
         this.type = type;
     }
 
     /**
-     * 
-     * @return
-     *     The price
+     * @return The price
      */
     public String getPrice() {
         return price;
     }
 
     /**
-     * 
-     * @param price
-     *     The price
+     * @param price The price
      */
     public void setPrice(String price) {
         this.price = price;

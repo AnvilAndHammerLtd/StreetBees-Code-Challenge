@@ -2,6 +2,7 @@
 package com.alexandroukyriakos.streetbeescodechallenge.models;
 
 import javax.annotation.Generated;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,36 +17,28 @@ public class Image {
     private String extension;
 
     /**
-     * 
-     * @return
-     *     The path
+     * @return The path
      */
     public String getPath() {
         return path;
     }
 
     /**
-     * 
-     * @param path
-     *     The path
+     * @param path The path
      */
     public void setPath(String path) {
         this.path = path;
     }
 
     /**
-     * 
-     * @return
-     *     The extension
+     * @return The extension
      */
     public String getExtension() {
         return extension;
     }
 
     /**
-     * 
-     * @param extension
-     *     The extension
+     * @param extension The extension
      */
     public void setExtension(String extension) {
         this.extension = extension;

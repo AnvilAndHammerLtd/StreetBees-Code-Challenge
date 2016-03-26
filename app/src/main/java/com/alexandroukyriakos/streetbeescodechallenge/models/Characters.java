@@ -23,78 +23,62 @@ public class Characters {
     private String collectionURI;
     @SerializedName("items")
     @Expose
-    private List<Item> items = new ArrayList<Item>();
+    private List<ItemWithRole> itemWithRoles = new ArrayList<ItemWithRole>();
 
     /**
-     * 
-     * @return
-     *     The available
+     * @return The available
      */
     public String getAvailable() {
         return available;
     }
 
     /**
-     * 
-     * @param available
-     *     The available
+     * @param available The available
      */
     public void setAvailable(String available) {
         this.available = available;
     }
 
     /**
-     * 
-     * @return
-     *     The returned
+     * @return The returned
      */
     public String getReturned() {
         return returned;
     }
 
     /**
-     * 
-     * @param returned
-     *     The returned
+     * @param returned The returned
      */
     public void setReturned(String returned) {
         this.returned = returned;
     }
 
     /**
-     * 
-     * @return
-     *     The collectionURI
+     * @return The collectionURI
      */
     public String getCollectionURI() {
         return collectionURI;
     }
 
     /**
-     * 
-     * @param collectionURI
-     *     The collectionURI
+     * @param collectionURI The collectionURI
      */
     public void setCollectionURI(String collectionURI) {
         this.collectionURI = collectionURI;
     }
 
     /**
-     * 
-     * @return
-     *     The items
+     * @return The itemWithRoles
      */
-    public List<Item> getItems() {
-        return items;
+    public List<ItemWithRole> getItemWithRoles() {
+        return itemWithRoles;
     }
 
     /**
-     * 
-     * @param items
-     *     The items
+     * @param itemWithRoles The itemWithRoles
      */
-    public void setItems(List<Item> items) {
-        this.items = items;
+    public void setItemWithRoles(List<ItemWithRole> itemWithRoles) {
+        this.itemWithRoles = itemWithRoles;
     }
 
 }

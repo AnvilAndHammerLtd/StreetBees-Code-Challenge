@@ -1,11 +1,13 @@
 
 package com.alexandroukyriakos.streetbeescodechallenge.models;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class Stories {
@@ -21,77 +23,61 @@ public class Stories {
     private String collectionURI;
     @SerializedName("items")
     @Expose
-    private List<Item__> items = new ArrayList<Item__>();
+    private List<ItemWithType> items = new ArrayList<ItemWithType>();
 
     /**
-     * 
-     * @return
-     *     The available
+     * @return The available
      */
     public String getAvailable() {
         return available;
     }
 
     /**
-     * 
-     * @param available
-     *     The available
+     * @param available The available
      */
     public void setAvailable(String available) {
         this.available = available;
     }
 
     /**
-     * 
-     * @return
-     *     The returned
+     * @return The returned
      */
     public String getReturned() {
         return returned;
     }
 
     /**
-     * 
-     * @param returned
-     *     The returned
+     * @param returned The returned
      */
     public void setReturned(String returned) {
         this.returned = returned;
     }
 
     /**
-     * 
-     * @return
-     *     The collectionURI
+     * @return The collectionURI
      */
     public String getCollectionURI() {
         return collectionURI;
     }
 
     /**
-     * 
-     * @param collectionURI
-     *     The collectionURI
+     * @param collectionURI The collectionURI
      */
     public void setCollectionURI(String collectionURI) {
         this.collectionURI = collectionURI;
     }
 
     /**
-     * 
-     * @return
-     *     The items
+     * @return The items
      */
-    public List<Item__> getItems() {
+    public List<ItemWithType> getItems() {
         return items;
     }
 
     /**
-     * 
-     * @param items
-     *     The items
+     * @param items The items
      */
-    public void setItems(List<Item__> items) {
+    public void setItems(List<ItemWithType> items) {
         this.items = items;
     }
 

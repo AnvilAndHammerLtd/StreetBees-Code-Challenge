@@ -1,9 +1,10 @@
 
 package com.alexandroukyriakos.streetbeescodechallenge.models;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class CollectedIssue {
@@ -16,36 +17,28 @@ public class CollectedIssue {
     private String name;
 
     /**
-     * 
-     * @return
-     *     The resourceURI
+     * @return The resourceURI
      */
     public String getResourceURI() {
         return resourceURI;
     }
 
     /**
-     * 
-     * @param resourceURI
-     *     The resourceURI
+     * @param resourceURI The resourceURI
      */
     public void setResourceURI(String resourceURI) {
         this.resourceURI = resourceURI;
     }
 
     /**
-     * 
-     * @return
-     *     The name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * 
-     * @param name
-     *     The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;

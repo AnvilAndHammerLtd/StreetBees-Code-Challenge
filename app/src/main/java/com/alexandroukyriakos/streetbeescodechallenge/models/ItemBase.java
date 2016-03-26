@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
-public class Item___ {
+public abstract class ItemBase {
     @SerializedName("resourceURI")
     @Expose
     private String resourceURI;

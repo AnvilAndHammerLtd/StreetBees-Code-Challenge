@@ -1,4 +1,4 @@
-package streetbeesinterviewtest.alexandroukyriakos.com.streetbeesinterviewtest;
+package com.alexandroukyriakos.streetbeescodechallenge;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;

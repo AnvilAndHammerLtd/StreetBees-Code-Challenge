@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">StreetBeesCodeChallenge</string>
-    <string name="action_settings">Settings</string>
+    <string name="marvel_api_copyrights">Data retrieved from Marvel 2014 - http://developer.marvel.com/</string>
 </resources>

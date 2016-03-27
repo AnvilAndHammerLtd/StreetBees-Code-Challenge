@@ -3,4 +3,7 @@
     <string name="get_comics_request_failure">Failed to retrieve comics, check your internet connection</string>
     <string name="marvel_api_copyrights">Data retrieved from Marvel 2014</string>
     <string name="dot">.</string>
+    <string name="title">Title:</string>
+    <string name="description">Description:</string>
+    <string name="non_applicable">N/A</string>
 </resources>

@@ -1,9 +1,12 @@
 package com.alexandroukyriakos.streetbeescodechallenge.ui.fragments;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.alexandroukyriakos.streetbeescodechallenge.R;
@@ -47,7 +50,6 @@ public class ComicsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-
         if (mComicsList.getAdapter() == null) {
             getComics();
         }
@@ -71,9 +73,26 @@ public class ComicsFragment extends BaseFragment {
     }
 
     private void setComics(List<Comic> comics) {
-        ComicsAdapter mComicsAdapter = new ComicsAdapter(getContext(), comics);
+        final ComicsAdapter mComicsAdapter = new ComicsAdapter(getContext(), comics);
         mComicsList.setAdapter(mComicsAdapter);
+        mComicsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                goToComicDetailsFragment(mComicsAdapter.getItem(position));
+            }
+        });
+
         mComicsAdapter.notifyDataSetChanged();
+    }
+
+    private void goToComicDetailsFragment(Comic comic) {
+        FragmentManager fm = getFragmentManager();
+        ComicDetailsFragment comicDetailsFragment = ComicDetailsFragment.newInstance(comic);
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.add(R.id.fragment, comicDetailsFragment, ComicDetailsFragment.TAG);
+        ft.addToBackStack(ComicDetailsFragment.TAG);
+        ft.commit();
+        fm.executePendingTransactions();
     }
 
     public void onEventMainThread(ErrorEvent event) {

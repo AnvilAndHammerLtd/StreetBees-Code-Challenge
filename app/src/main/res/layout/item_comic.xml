@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="@dimen/comic_thumbnail_size"
-        android:layout_height="@dimen/comic_thumbnail_size"
+        android:layout_width="@dimen/item_comic_thumbnail_size"
+        android:layout_height="@dimen/item_comic_thumbnail_size"
         android:src="@drawable/comic_thumbnail_placeholder" />
 
     <TextView

@@ -30,7 +30,7 @@ public class ComicsAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Comic getItem(int position) {
         return mComics.get(position);
     }
 
@@ -76,7 +76,6 @@ public class ComicsAdapter extends BaseAdapter {
                 mContext, thumbnailFinalUrl,
                 R.drawable.comic_thumbnail_placeholder, viewHolder.thumbnail);
     }
-
 
     private class ViewHolder {
         ImageView thumbnail;

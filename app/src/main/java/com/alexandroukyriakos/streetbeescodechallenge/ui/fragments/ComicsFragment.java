@@ -1,8 +1,12 @@
 package com.alexandroukyriakos.streetbeescodechallenge.ui.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +30,9 @@ import de.greenrobot.event.EventBus;
 /**
  * Responsible for displaying all the comics
  */
-public class ComicsFragment extends BaseFragment {
+public class ComicsFragment extends BaseFragment implements ComicsAdapter.ComicsAdapterUiCallback {
     public static final String TAG = ComicsFragment.class.getName();
+    private static final int CAMERA_IMAGE_CAPTURE_REQUEST_CODE = 5;
     private ListView mComicsList;
 
     public ComicsFragment() {
@@ -73,7 +78,7 @@ public class ComicsFragment extends BaseFragment {
     }
 
     private void setComics(List<Comic> comics) {
-        final ComicsAdapter mComicsAdapter = new ComicsAdapter(getContext(), comics);
+        final ComicsAdapter mComicsAdapter = new ComicsAdapter(getContext(), comics, this);
         mComicsList.setAdapter(mComicsAdapter);
         mComicsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -111,5 +116,34 @@ public class ComicsFragment extends BaseFragment {
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
+    }
+
+    @Override
+    public void askToChangeThumbnailDialogResponse(boolean success) {
+        if (success) {
+            openCameraForImageResult();
+        }
+    }
+
+    private void openCameraForImageResult() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, CAMERA_IMAGE_CAPTURE_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (CAMERA_IMAGE_CAPTURE_REQUEST_CODE == requestCode) {
+            //TODO get image, resize it, compress it, map it with the comic cover image, store it to dropbox
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    Log.v("kiki", "onActivityResult CAMERA_IMAGE_CAPTURE_REQUEST_CODE RESULT_OK");
+                    break;
+
+                case Activity.RESULT_CANCELED:
+                    Log.v("kiki", "onActivityResult CAMERA_IMAGE_CAPTURE_REQUEST_CODE RESULT_CANCELED");
+                    break;
+            }
+        }
     }
 }

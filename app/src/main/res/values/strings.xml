@@ -1,9 +1,16 @@
 <resources>
     <string name="app_name">StreetBeesCodeChallenge</string>
+    <string name="dot">.</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
     <string name="get_comics_request_failure">Failed to retrieve comics, check your internet connection</string>
     <string name="marvel_api_copyrights">Data retrieved from Marvel 2014</string>
-    <string name="dot">.</string>
     <string name="title">Title:</string>
     <string name="description">Description:</string>
     <string name="non_applicable">N/A</string>
+    <string name="ask_to_change_thumbnail_title">Change thumbnail?</string>
+    <string name="ask_to_change_thumbnail_positive_btn">@string/yes</string>
+    <string name="ask_to_change_thumbnail_negative_btn">@string/no</string>
+
 </resources>

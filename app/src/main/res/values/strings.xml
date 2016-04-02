@@ -9,8 +9,9 @@
     <string name="title">Title:</string>
     <string name="description">Description:</string>
     <string name="non_applicable">N/A</string>
-    <string name="ask_to_change_thumbnail_title">Change thumbnail?</string>
+    <string name="thumbnail_dialog_change_title">Change thumbnail?</string>
     <string name="ask_to_change_thumbnail_positive_btn">@string/yes</string>
     <string name="ask_to_change_thumbnail_negative_btn">@string/no</string>
+    <string name="header_content_description">cover image</string>
 
 </resources>

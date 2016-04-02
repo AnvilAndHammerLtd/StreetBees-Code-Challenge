@@ -1,8 +1,6 @@
 package com.alexandroukyriakos.streetbeescodechallenge.ui.adapters;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +8,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alexandroukyriakos.streetbeescodechallenge.ComicUtil;
 import com.alexandroukyriakos.streetbeescodechallenge.R;
 import com.alexandroukyriakos.streetbeescodechallenge.UiUtil;
 import com.alexandroukyriakos.streetbeescodechallenge.models.Comic;
+import com.alexandroukyriakos.streetbeescodechallenge.ui.customcomponents.ThumbnailChangeDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +20,15 @@ import java.util.List;
 public class ComicsAdapter extends BaseAdapter {
     private List<Comic> mComics = new ArrayList<>();
     private Context mContext;
-    private ComicsAdapterUiCallback mComicsAdapterUiCallback;
+    private ThumbnailChangeDialog mThumbnailChangeDialog;
 
-    public ComicsAdapter(Context context, List<Comic> comics, ComicsAdapterUiCallback comicsAdapterUiCallback) {
+    private ThumbnailChangeDialog.ThumbnailChangeDialogCallback mThumbnailChangeDialogCallback;
+
+    public ComicsAdapter(Context context, List<Comic> comics, ThumbnailChangeDialog.ThumbnailChangeDialogCallback thumbnailChangeDialogCallback) {
         mContext = context;
         mComics = comics;
-        mComicsAdapterUiCallback = comicsAdapterUiCallback;
+        mThumbnailChangeDialogCallback = thumbnailChangeDialogCallback;
+        mThumbnailChangeDialog = new ThumbnailChangeDialog(mContext);
     }
 
     @Override
@@ -65,51 +68,26 @@ public class ComicsAdapter extends BaseAdapter {
     private void bindViews(View convertView, ViewHolder viewHolder) {
         viewHolder.thumbnail = (ImageView) convertView.findViewById(R.id.image);
         viewHolder.title = (TextView) convertView.findViewById(R.id.title);
+    }
+
+    private void setViewsValues(ViewHolder viewHolder, final Comic comic) {
+        setComicThumbnail(comic, viewHolder);
+        viewHolder.title.setText(comic.getTitle());
 
         viewHolder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                askToChangeThumbnailDialog();
+                mThumbnailChangeDialog.show(comic, mThumbnailChangeDialogCallback);
             }
         });
     }
 
-    public interface ComicsAdapterUiCallback {
-        void askToChangeThumbnailDialogResponse(boolean success);
-    }
-
-    private void askToChangeThumbnailDialog() {
-        AlertDialog dialog =
-                new AlertDialog.Builder(mContext)
-                        .setTitle(R.string.ask_to_change_thumbnail_title)
-                        .setPositiveButton(R.string.ask_to_change_thumbnail_positive_btn, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mComicsAdapterUiCallback.askToChangeThumbnailDialogResponse(true);
-                            }
-                        })
-                        .setNegativeButton(R.string.ask_to_change_thumbnail_negative_btn, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mComicsAdapterUiCallback.askToChangeThumbnailDialogResponse(false);
-                            }
-                        })
-                        .create();
-        dialog.show();
-    }
-
-    private void setViewsValues(ViewHolder viewHolder, Comic comic) {
-        setComicThumbnail(comic, viewHolder);
-        viewHolder.title.setText(comic.getTitle());
-    }
-
     private void setComicThumbnail(Comic comic, ViewHolder viewHolder) {
-        String thumbnailPath = comic.getThumbnail().getPath();
-        String thumbnailFinalUrl = thumbnailPath + mContext.getString(R.string.dot)
-                + comic.getThumbnail().getExtension();
         UiUtil.loadImageInto(
-                mContext, thumbnailFinalUrl,
-                R.drawable.comic_thumbnail_placeholder, viewHolder.thumbnail);
+                mContext,
+                ComicUtil.getComicThumbnailPath(mContext, comic),
+                R.drawable.comic_thumbnail_placeholder,
+                viewHolder.thumbnail);
     }
 
     private class ViewHolder {

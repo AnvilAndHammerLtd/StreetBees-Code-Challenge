@@ -3,4 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="header_background">@android:color/white</color>
+    <color name="header_text">@android:color/black</color>
+    <color name="header_divider">@android:color/holo_orange_dark</color>
+
+    <color name="thumbnail_change_dialog_header_background">@android:color/holo_red_dark</color>
+    <color name="thumbnail_change_dialog_header_text">@android:color/white</color>
+    <color name="thumbnail_change_dialog_header_divider">@color/header_divider</color>
 </resources>

@@ -22,6 +22,7 @@ import com.alexandroukyriakos.streetbeescodechallenge.models.Comic;
 import com.alexandroukyriakos.streetbeescodechallenge.services.ComicsResultService;
 import com.alexandroukyriakos.streetbeescodechallenge.ui.activities.BaseActivity;
 import com.alexandroukyriakos.streetbeescodechallenge.ui.adapters.ComicsAdapter;
+import com.alexandroukyriakos.streetbeescodechallenge.ui.customcomponents.ThumbnailChangeDialog;
 
 import java.util.List;
 
@@ -30,9 +31,9 @@ import de.greenrobot.event.EventBus;
 /**
  * Responsible for displaying all the comics
  */
-public class ComicsFragment extends BaseFragment implements ComicsAdapter.ComicsAdapterUiCallback {
+public class ComicsFragment extends BaseFragment implements ThumbnailChangeDialog.ThumbnailChangeDialogCallback {
     public static final String TAG = ComicsFragment.class.getName();
-    private static final int CAMERA_IMAGE_CAPTURE_REQUEST_CODE = 5;
+    private static final int CAMERA_IMAGE_CAPTURE_REQUEST_CODE = 1;
     private ListView mComicsList;
 
     public ComicsFragment() {
@@ -119,7 +120,7 @@ public class ComicsFragment extends BaseFragment implements ComicsAdapter.Comics
     }
 
     @Override
-    public void askToChangeThumbnailDialogResponse(boolean success) {
+    public void askToChangeThumbnailDialogResponse(boolean success, final Comic comic) {
         if (success) {
             openCameraForImageResult();
         }
@@ -138,6 +139,11 @@ public class ComicsFragment extends BaseFragment implements ComicsAdapter.Comics
             switch (resultCode) {
                 case Activity.RESULT_OK:
                     Log.v("kiki", "onActivityResult CAMERA_IMAGE_CAPTURE_REQUEST_CODE RESULT_OK");
+                    // /streetbeesChallengeTest/[comic_id_folder]/customThumbnails
+//                    String DROPBOX_START_PATH = "/streetbeesChallengeTest/";
+//                    String CUSTOM_THUMBNAIL_DROPBOX_PATH = "/customThumbnails";
+//
+//                    String finalPathForCustomThumbnails = DROPBOX_START_PATH + comic.getId() + CUSTOM_THUMBNAIL_DROPBOX_PATH;
                     break;
 
                 case Activity.RESULT_CANCELED:

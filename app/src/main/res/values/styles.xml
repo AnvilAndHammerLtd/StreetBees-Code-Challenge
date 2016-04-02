@@ -17,6 +17,8 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="AppTheme.Dialog" parent="android:Theme.Holo.Light.Dialog.NoActionBar" />
+
     <style name="progress_bar_container">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -27,4 +29,78 @@
         <item name="android:visibility">gone</item>
     </style>
 
+
+    <style name="Divider">
+        <item name="android:id">@id/divider</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="Divider.Horizontal">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/height_divider</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:paddingBottom">@dimen/header_divider_margin</item>
+    </style>
+
+    <!-- text -->
+    <style name="Text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+
+    <!-- text CONTENT -->
+    <style name="Text.Content">
+        <item name="android:textSize">@dimen/text_size_small</item>
+    </style>
+
+    <style name="Text.Content.White">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="Text.Content.Black">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <!-- text TITLE -->
+    <style name="Text.Title">
+        <item name="android:textSize">@dimen/text_size_large</item>
+    </style>
+
+    <style name="Text.Title.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.Title.Bold.White">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="Text.Title.Bold.Black">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <!-- text HEADER -->
+    <style name="Text.Title.Bold.Header">
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="Text.Title.Bold.Header.White">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="Text.Title.Bold.Header.Black">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="Text.Title.Bold.Header.Dialog">
+        <item name="android:textSize">@dimen/text_size_large</item>
+    </style>
+
+    <style name="Text.Title.Bold.Header.Dialog.White">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="Text.Title.Bold.Header.Dialog.Black">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
 </resources>

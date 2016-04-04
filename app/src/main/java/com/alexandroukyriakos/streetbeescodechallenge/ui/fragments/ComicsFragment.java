@@ -1,8 +1,11 @@
 package com.alexandroukyriakos.streetbeescodechallenge.ui.fragments;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -15,6 +18,8 @@ import android.widget.ListView;
 
 import com.alexandroukyriakos.streetbeescodechallenge.R;
 import com.alexandroukyriakos.streetbeescodechallenge.UiUtil;
+import com.alexandroukyriakos.streetbeescodechallenge.dropbox.DropboxHelper;
+import com.alexandroukyriakos.streetbeescodechallenge.dropbox.UploadPicture;
 import com.alexandroukyriakos.streetbeescodechallenge.events.ComicsResultEvent;
 import com.alexandroukyriakos.streetbeescodechallenge.events.ErrorEvent;
 import com.alexandroukyriakos.streetbeescodechallenge.helpers.BaseProgressBarHelper;
@@ -24,6 +29,7 @@ import com.alexandroukyriakos.streetbeescodechallenge.ui.activities.BaseActivity
 import com.alexandroukyriakos.streetbeescodechallenge.ui.adapters.ComicsAdapter;
 import com.alexandroukyriakos.streetbeescodechallenge.ui.customcomponents.ThumbnailChangeDialog;
 
+import java.io.File;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -35,6 +41,18 @@ public class ComicsFragment extends BaseFragment implements ThumbnailChangeDialo
     public static final String TAG = ComicsFragment.class.getName();
     private static final int CAMERA_IMAGE_CAPTURE_REQUEST_CODE = 1;
     private ListView mComicsList;
+    public static DropboxHelper mDropboxHelper;
+
+    private String mDropboxPhotoDirectoryFullPath;
+    private String mLocalPhotoFullPath;
+
+    /*
+    custom thumbnails directory path
+    /streetbeesChallengeTest/[folder_with_the_comic_id_as_a_name]/currentCustomThumbnail.jpg
+    */
+    private static final String DROPBOX_START_FOLDER_PATH = "/streetbeesCodeChallenge/";
+    private static final String CUSTOM_THUMBNAIL_NAME = "/currentCustomThumbnail";
+    private static final String CUSTOM_THUMBNAIL_EXTENSION = ".jpg";
 
     public ComicsFragment() {
     }
@@ -43,6 +61,13 @@ public class ComicsFragment extends BaseFragment implements ThumbnailChangeDialo
         ComicsFragment fragment = new ComicsFragment();
         fragment.setProgressBarHelper(baseProgressBarHelper);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mDropboxHelper = new DropboxHelper(getContext());
+        mDropboxHelper.startRemoteAuthentication();
     }
 
     @Override
@@ -59,6 +84,7 @@ public class ComicsFragment extends BaseFragment implements ThumbnailChangeDialo
         if (mComicsList.getAdapter() == null) {
             getComics();
         }
+        mDropboxHelper.finishAuthentication();
     }
 
     private void bindViews(View view) {
@@ -122,34 +148,50 @@ public class ComicsFragment extends BaseFragment implements ThumbnailChangeDialo
     @Override
     public void askToChangeThumbnailDialogResponse(boolean success, final Comic comic) {
         if (success) {
-            openCameraForImageResult();
+            mDropboxPhotoDirectoryFullPath = DROPBOX_START_FOLDER_PATH + comic.getId() + "/";
+            Intent intent = initialiseCameraForImageResult(comic);
+            openCameraForImageResult(intent);
         }
     }
 
-    private void openCameraForImageResult() {
+    private Intent initialiseCameraForImageResult(Comic comic) {
+
+        String customThumbnailName = CUSTOM_THUMBNAIL_NAME + CUSTOM_THUMBNAIL_EXTENSION;
+        String outPath = new File(Environment.getExternalStorageDirectory() + "/" + comic.getId() + "/", customThumbnailName).getPath();
+        File outFile = new File(outPath);
+        mLocalPhotoFullPath = outFile.toString();
+        Uri outuri = Uri.fromFile(outFile);
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA_IMAGE_CAPTURE_REQUEST_CODE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, outuri);
+        return intent;
+    }
+
+    private void openCameraForImageResult(Intent intent) {
+        Log.i(TAG, "Importing New Picture: " + mLocalPhotoFullPath);
+        try {
+            startActivityForResult(intent, CAMERA_IMAGE_CAPTURE_REQUEST_CODE);
+        } catch (ActivityNotFoundException e) {
+            UiUtil.showToastMessageCentered(getContext(),
+                    "There doesn't seem to be a camera.");
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (CAMERA_IMAGE_CAPTURE_REQUEST_CODE == requestCode) {
-            //TODO get image, resize it, compress it, map it with the comic cover image, store it to dropbox
-            switch (resultCode) {
-                case Activity.RESULT_OK:
-                    Log.v("kiki", "onActivityResult CAMERA_IMAGE_CAPTURE_REQUEST_CODE RESULT_OK");
-                    // /streetbeesChallengeTest/[comic_id_folder]/customThumbnails
-//                    String DROPBOX_START_PATH = "/streetbeesChallengeTest/";
-//                    String CUSTOM_THUMBNAIL_DROPBOX_PATH = "/customThumbnails";
-//
-//                    String finalPathForCustomThumbnails = DROPBOX_START_PATH + comic.getId() + CUSTOM_THUMBNAIL_DROPBOX_PATH;
-                    break;
+        switch (resultCode) {
+            case Activity.RESULT_OK:
+                File file = new File(mLocalPhotoFullPath);
 
-                case Activity.RESULT_CANCELED:
-                    Log.v("kiki", "onActivityResult CAMERA_IMAGE_CAPTURE_REQUEST_CODE RESULT_CANCELED");
-                    break;
-            }
+                UploadPicture upload =
+                        new UploadPicture(
+                                getContext(),
+                                mDropboxHelper.getDBApi(),
+                                mDropboxPhotoDirectoryFullPath,
+                                file);
+                upload.execute();
+                break;
         }
     }
 }

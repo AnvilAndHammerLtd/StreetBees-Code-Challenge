@@ -7,6 +7,7 @@ android {
         applicationId 'com.alexandroukyriakos.streetbeescodechallenge'
         minSdkVersion 15
         targetSdkVersion 23
+
         versionCode 1
         versionName "1.0"
     }
@@ -29,5 +30,7 @@ dependencies {
     compile 'javax.annotation:jsr250-api:1.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile "com.squareup.picasso:picasso:2.4.0"
+    compile 'com.squareup.picasso:picasso:2.4.0'
+    compile files('libs/dropbox-android-sdk-1.6.3.jar')
+    compile files('libs/json_simple-1.1.jar')
 }

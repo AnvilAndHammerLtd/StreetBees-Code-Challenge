@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Dropbox, Inc.
+ * Copyright (c) 2010-11 Dropbox, Inc.
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -24,113 +24,109 @@
  */
 
 
-package com.alexandroukyriakos.streetbeescodechallenge.dropbox;
+package com.alexandroukyriakos.streetbeescodechallenge.helpers.dropbox;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
-import android.widget.Toast;
+import android.util.Log;
 
 import com.dropbox.client2.DropboxAPI;
-import com.dropbox.client2.DropboxAPI.UploadRequest;
-import com.dropbox.client2.ProgressListener;
+import com.dropbox.client2.DropboxAPI.Entry;
+import com.dropbox.client2.DropboxAPI.ThumbFormat;
+import com.dropbox.client2.DropboxAPI.ThumbSize;
 import com.dropbox.client2.exception.DropboxException;
-import com.dropbox.client2.exception.DropboxFileSizeException;
 import com.dropbox.client2.exception.DropboxIOException;
 import com.dropbox.client2.exception.DropboxParseException;
 import com.dropbox.client2.exception.DropboxPartialFileException;
 import com.dropbox.client2.exception.DropboxServerException;
 import com.dropbox.client2.exception.DropboxUnlinkedException;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
 
 /**
- * Here we show uploading a file in a background thread, trying to show
- * typical exception handling and flow of control for an app that uploads a
- * file from Dropbox.
+ * Here we show getting metadata for a directory and downloading a file in a
+ * background thread, trying to show typical exception handling and flow of
+ * control for an app that downloads a file from Dropbox.
  */
-public class UploadPicture extends AsyncTask<Void, Long, Boolean> {
 
+public abstract class DownloadPicture extends AsyncTask<Void, Long, Boolean> {
+
+    private Context mContext;
     private DropboxAPI<?> mApi;
     private String mPath;
-    private File mFile;
-
-    private long mFileLen;
-    private UploadRequest mRequest;
-    private Context mContext;
-    private final ProgressDialog mDialog;
-
+    private final String mImageFileName;
+    private FileOutputStream mFos;
     private String mErrorMsg;
+    private String mCachePath;
 
-
-    public UploadPicture(Context context, DropboxAPI<?> api, String dropboxPath,
-                         File file) {
+    public DownloadPicture(Context context, DropboxAPI<?> api,
+                           String dropboxPath, String imageFileName) {
         // We set the context this way so we don't accidentally leak activities
         mContext = context.getApplicationContext();
-
-        mFileLen = file.length();
+        mImageFileName = imageFileName;
         mApi = api;
         mPath = dropboxPath;
-        mFile = file;
-
-        mDialog = new ProgressDialog(context);
-        mDialog.setMax(100);
-        mDialog.setMessage("Uploading " + file.getName());
-        mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        mDialog.setProgress(0);
-        mDialog.setButton(ProgressDialog.BUTTON_POSITIVE, "Cancel", new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // This will cancel the putFile operation
-                mRequest.abort();
-            }
-        });
-        mDialog.show();
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
         try {
-            // By creating a request, we get a handle to the putFile operation,
-            // so we can cancel it later if we want to
-            FileInputStream fis = new FileInputStream(mFile);
-            String path = mPath + mFile.getName();
-            mRequest = mApi.putFileOverwriteRequest(path, fis, mFile.length(),
-                    new ProgressListener() {
-                        @Override
-                        public long progressInterval() {
-                            // Update the progress bar every half-second or so
-                            return 500;
-                        }
 
-                        @Override
-                        public void onProgress(long bytes, long total) {
-                            publishProgress(bytes);
-                        }
-                    });
+            // Get the metadata for a directory
+            Entry dirent = mApi.metadata(mPath, 1000, null, true, null);
 
-            if (mRequest != null) {
-                mRequest.upload();
-                return true;
+            if (!dirent.isDir || dirent.contents == null) {
+                // It's not a directory, or there's nothing in it
+                mErrorMsg = "File or empty directory";
+                return false;
             }
 
+            // Make a list of everything in it that we can get a thumbnail for
+            ArrayList<Entry> thumbs = new ArrayList<Entry>();
+            for (Entry ent : dirent.contents) {
+                if (ent.thumbExists) {
+                    // Add it to the list of thumbs we can choose from
+                    thumbs.add(ent);
+                }
+            }
+
+            if (thumbs.size() == 0) {
+                // No thumbs in that directory
+                mErrorMsg = "No pictures in that directory";
+                return false;
+            }
+
+            Entry ent = thumbs.get(0);
+            String path = ent.path;
+
+            mCachePath = mContext.getCacheDir().getAbsolutePath() + "/" + mImageFileName;
+            try {
+                mFos = new FileOutputStream(mCachePath);
+            } catch (FileNotFoundException e) {
+                mErrorMsg = "Couldn't create a local file to store the image";
+                return false;
+            }
+
+            // This downloads a smaller, thumbnail version of the file.  The
+            // API to download the actual file is roughly the same.
+            mApi.getThumbnail(path, mFos, ThumbSize.BESTFIT_960x640,
+                    ThumbFormat.JPEG, null);
+
+            return true;
+
         } catch (DropboxUnlinkedException e) {
-            // This session wasn't authenticated properly or user unlinked
-            mErrorMsg = "This app wasn't authenticated properly.";
-        } catch (DropboxFileSizeException e) {
-            // File size too big to upload via the API
-            mErrorMsg = "This file is too big to upload";
+            // The AuthSession wasn't properly authenticated or user unlinked.
         } catch (DropboxPartialFileException e) {
             // We canceled the operation
-            mErrorMsg = "Upload canceled";
+            mErrorMsg = "Download canceled";
         } catch (DropboxServerException e) {
             // Server-side exception.  These are examples of what could happen,
             // but we don't do anything special with them here.
-            if (e.error == DropboxServerException._401_UNAUTHORIZED) {
+            if (e.error == DropboxServerException._304_NOT_MODIFIED) {
+                // won't happen since we don't pass in revision with metadata
+            } else if (e.error == DropboxServerException._401_UNAUTHORIZED) {
                 // Unauthorized, so we should unlink them.  You may want to
                 // automatically log the user out in this case.
             } else if (e.error == DropboxServerException._403_FORBIDDEN) {
@@ -138,6 +134,10 @@ public class UploadPicture extends AsyncTask<Void, Long, Boolean> {
             } else if (e.error == DropboxServerException._404_NOT_FOUND) {
                 // path not found (or if it was the thumbnail, can't be
                 // thumbnailed)
+            } else if (e.error == DropboxServerException._406_NOT_ACCEPTABLE) {
+                // too many entries to return
+            } else if (e.error == DropboxServerException._415_UNSUPPORTED_MEDIA) {
+                // can't be thumbnailed
             } else if (e.error == DropboxServerException._507_INSUFFICIENT_STORAGE) {
                 // user is over quota
             } else {
@@ -157,29 +157,23 @@ public class UploadPicture extends AsyncTask<Void, Long, Boolean> {
         } catch (DropboxException e) {
             // Unknown error
             mErrorMsg = "Unknown error.  Try again.";
-        } catch (FileNotFoundException e) {
         }
         return false;
     }
 
     @Override
     protected void onProgressUpdate(Long... progress) {
-        int percent = (int) (100.0 * (double) progress[0] / mFileLen + 0.5);
-        mDialog.setProgress(percent);
     }
 
     @Override
     protected void onPostExecute(Boolean result) {
-        mDialog.dismiss();
         if (result) {
-            showToast("Image successfully uploaded");
+            onDownloadPicture(mCachePath);
         } else {
-            showToast(mErrorMsg);
+            // Couldn't download it, so show an error
+            Log.w("kiki", "mErrorMsg when trying to download custom comic thumbnail: " + mErrorMsg);
         }
     }
 
-    private void showToast(String msg) {
-        Toast error = Toast.makeText(mContext, msg, Toast.LENGTH_LONG);
-        error.show();
-    }
+    protected abstract void onDownloadPicture(String cachePath);
 }

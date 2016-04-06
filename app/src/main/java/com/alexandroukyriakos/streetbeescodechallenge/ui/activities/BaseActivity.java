@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.alexandroukyriakos.streetbeescodechallenge.Util;
-import com.alexandroukyriakos.streetbeescodechallenge.helpers.BaseProgressBarHelper;
-import com.alexandroukyriakos.streetbeescodechallenge.helpers.FactoryProgressBarHelper;
-import com.alexandroukyriakos.streetbeescodechallenge.helpers.SimpleProgressBarHelper;
+import com.alexandroukyriakos.streetbeescodechallenge.helpers.progressbar.BaseProgressBarHelper;
+import com.alexandroukyriakos.streetbeescodechallenge.helpers.progressbar.FactoryProgressBarHelper;
+import com.alexandroukyriakos.streetbeescodechallenge.helpers.progressbar.SimpleProgressBarHelper;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;

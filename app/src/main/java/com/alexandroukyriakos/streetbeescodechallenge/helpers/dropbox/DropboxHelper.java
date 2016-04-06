@@ -1,4 +1,4 @@
-package com.alexandroukyriakos.streetbeescodechallenge.dropbox;
+package com.alexandroukyriakos.streetbeescodechallenge.helpers.dropbox;
 
 import android.content.Context;
 import android.content.Intent;

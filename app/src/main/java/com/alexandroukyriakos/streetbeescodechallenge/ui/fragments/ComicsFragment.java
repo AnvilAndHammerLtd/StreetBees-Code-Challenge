@@ -17,14 +17,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.alexandroukyriakos.streetbeescodechallenge.DownloadComicCustomThumbnail;
 import com.alexandroukyriakos.streetbeescodechallenge.R;
 import com.alexandroukyriakos.streetbeescodechallenge.UiUtil;
-import com.alexandroukyriakos.streetbeescodechallenge.dropbox.DropboxHelper;
-import com.alexandroukyriakos.streetbeescodechallenge.dropbox.UploadPicture;
+import com.alexandroukyriakos.streetbeescodechallenge.helpers.dropbox.DownloadComicPicture;
+import com.alexandroukyriakos.streetbeescodechallenge.helpers.dropbox.DropboxHelper;
+import com.alexandroukyriakos.streetbeescodechallenge.helpers.dropbox.UploadPicture;
 import com.alexandroukyriakos.streetbeescodechallenge.events.ComicsResultEvent;
 import com.alexandroukyriakos.streetbeescodechallenge.events.ErrorEvent;
-import com.alexandroukyriakos.streetbeescodechallenge.helpers.BaseProgressBarHelper;
+import com.alexandroukyriakos.streetbeescodechallenge.helpers.progressbar.BaseProgressBarHelper;
 import com.alexandroukyriakos.streetbeescodechallenge.models.Comic;
 import com.alexandroukyriakos.streetbeescodechallenge.services.ComicsResultService;
 import com.alexandroukyriakos.streetbeescodechallenge.ui.activities.BaseActivity;
@@ -39,7 +39,9 @@ import de.greenrobot.event.EventBus;
 /**
  * Responsible for displaying all the comics
  */
-public class ComicsFragment extends BaseFragment implements ThumbnailChangeDialog.ThumbnailChangeDialogCallback {
+public class ComicsFragment extends BaseFragment implements
+        ThumbnailChangeDialog.ThumbnailChangeDialogCallback,
+        DownloadComicPicture.DownloadComicPictureCallback {
     public static final String TAG = ComicsFragment.class.getName();
     private static final int CAMERA_IMAGE_CAPTURE_REQUEST_CODE = 1;
     private ListView mComicsList;
@@ -88,10 +90,6 @@ public class ComicsFragment extends BaseFragment implements ThumbnailChangeDialo
             getComics();
         }
         mDropboxHelper.finishAuthentication();
-
-        if (mComicsAdapter != null) {
-            mComicsAdapter.notifyDataSetChanged();
-        }
     }
 
     private void bindViews(View view) {
@@ -135,13 +133,22 @@ public class ComicsFragment extends BaseFragment implements ThumbnailChangeDialo
                     final String customThumbnailDirectoryPath = DROPBOX_START_FOLDER_PATH + comic.getId() + "/";
                     String finalThumbnailName = CUSTOM_THUMBNAIL_NAME + comic.getId() + CUSTOM_THUMBNAIL_EXTENSION;
 
-                    DownloadComicCustomThumbnail download = new DownloadComicCustomThumbnail(
+                    DownloadComicPicture download = new DownloadComicPicture(
                             getContext(),
                             mDropboxHelper.getDBApi(),
                             customThumbnailDirectoryPath,
                             finalThumbnailName,
-                            comic.getThumbnail()
+                            comic,
+                            ComicsFragment.this
                     );
+
+//                    DownloadPicture download = new DownloadPicture(
+//                            getContext(),
+//                            mDropboxHelper.getDBApi(),
+//                            customThumbnailDirectoryPath,
+//                            finalThumbnailName,
+//                            comic.getThumbnail()
+//                    );
 
                     download.execute();
                 }
@@ -187,7 +194,6 @@ public class ComicsFragment extends BaseFragment implements ThumbnailChangeDialo
     }
 
     private Intent initialiseCameraForImageResult(Comic comic) {
-
         String finalThumbnailName = CUSTOM_THUMBNAIL_NAME + comic.getId() + CUSTOM_THUMBNAIL_EXTENSION;
 
         String outPath = new File(Environment.getExternalStorageDirectory() + "/" + comic.getId() + "/", finalThumbnailName).getPath();
@@ -225,6 +231,13 @@ public class ComicsFragment extends BaseFragment implements ThumbnailChangeDialo
                                 file);
                 upload.execute();
                 break;
+        }
+    }
+
+    @Override
+    public void onDownloadComicPicture(Comic comic) {
+        if (mComicsAdapter != null) {
+            mComicsAdapter.notifyDataSetChanged();
         }
     }
 }

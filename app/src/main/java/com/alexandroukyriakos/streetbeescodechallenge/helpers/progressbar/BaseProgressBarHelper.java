@@ -1,4 +1,4 @@
-package com.alexandroukyriakos.streetbeescodechallenge.helpers;
+package com.alexandroukyriakos.streetbeescodechallenge.helpers.progressbar;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

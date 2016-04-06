@@ -24,6 +24,9 @@ public class HeaderComponent extends LinearLayout {
     private TextView mTitle;
     private View mDivider;
 
+    public ImageView getIconImageView() {
+        return mIcon;
+    }
     public void setBackgroundResource(int color) {
         mContentContainer.setBackgroundResource(color);
     }

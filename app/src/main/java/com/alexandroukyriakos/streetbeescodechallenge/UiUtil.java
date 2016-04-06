@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+
 /**
  * Useful generic UI re-usable methods
  */
@@ -54,6 +56,17 @@ public class UiUtil {
             int placeholderResId, ImageView into) {
         Picasso.with(context)
                 .load(imageUrl)
+                .placeholder(placeholderResId)
+                .into(into);
+    }
+
+    public static void loadImageInto(
+            Context context, File file,
+            int placeholderResId, ImageView into) {
+        Picasso.with(context)
+                .load(file)
+                .resize(context.getResources().getDimensionPixelSize(R.dimen.item_comic_thumbnail_size),
+                        context.getResources().getDimensionPixelSize(R.dimen.item_comic_thumbnail_size))
                 .placeholder(placeholderResId)
                 .into(into);
     }

@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alexandroukyriakos.streetbeescodechallenge.ComicUtil;
 import com.alexandroukyriakos.streetbeescodechallenge.R;
-import com.alexandroukyriakos.streetbeescodechallenge.UiUtil;
 import com.alexandroukyriakos.streetbeescodechallenge.models.Comic;
 
 public class ComicDetailsFragment extends BaseFragment {
@@ -47,17 +47,9 @@ public class ComicDetailsFragment extends BaseFragment {
     }
 
     private void setViewsValues() {
-        setComicThumbnail();
+        ComicUtil.loadComicThumbnail(getContext(), mComic, mThumbnail);
+
         mTitle.setText(mComic.getTitle());
         mDescription.setText(mComic.getDescription());
-    }
-
-    private void setComicThumbnail() {
-        String thumbnailPath = mComic.getThumbnail().getPath();
-        String thumbnailFinalUrl = thumbnailPath + getString(R.string.dot)
-                + mComic.getThumbnail().getExtension();
-        UiUtil.loadImageInto(
-                getContext(), thumbnailFinalUrl,
-                R.drawable.comic_thumbnail_placeholder, mThumbnail);
     }
 }

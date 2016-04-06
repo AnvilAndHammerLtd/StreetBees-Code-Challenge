@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.alexandroukyriakos.streetbeescodechallenge.DownloadComicCustomThumbnail;
 import com.alexandroukyriakos.streetbeescodechallenge.R;
 import com.alexandroukyriakos.streetbeescodechallenge.UiUtil;
 import com.alexandroukyriakos.streetbeescodechallenge.dropbox.DropboxHelper;
@@ -41,18 +43,19 @@ public class ComicsFragment extends BaseFragment implements ThumbnailChangeDialo
     public static final String TAG = ComicsFragment.class.getName();
     private static final int CAMERA_IMAGE_CAPTURE_REQUEST_CODE = 1;
     private ListView mComicsList;
-    public static DropboxHelper mDropboxHelper;
+    private DropboxHelper mDropboxHelper;
 
     private String mDropboxPhotoDirectoryFullPath;
     private String mLocalPhotoFullPath;
+    private ComicsAdapter mComicsAdapter;
 
     /*
     custom thumbnails directory path
     /streetbeesChallengeTest/[folder_with_the_comic_id_as_a_name]/currentCustomThumbnail.jpg
     */
-    private static final String DROPBOX_START_FOLDER_PATH = "/streetbeesCodeChallenge/";
-    private static final String CUSTOM_THUMBNAIL_NAME = "/currentCustomThumbnail";
-    private static final String CUSTOM_THUMBNAIL_EXTENSION = ".jpg";
+    public static final String DROPBOX_START_FOLDER_PATH = "/streetbeesCodeChallenge/";
+    public static final String CUSTOM_THUMBNAIL_NAME = "currentCustomThumbnail";
+    public static final String CUSTOM_THUMBNAIL_EXTENSION = ".jpg";
 
     public ComicsFragment() {
     }
@@ -85,6 +88,10 @@ public class ComicsFragment extends BaseFragment implements ThumbnailChangeDialo
             getComics();
         }
         mDropboxHelper.finishAuthentication();
+
+        if (mComicsAdapter != null) {
+            mComicsAdapter.notifyDataSetChanged();
+        }
     }
 
     private void bindViews(View view) {
@@ -93,9 +100,9 @@ public class ComicsFragment extends BaseFragment implements ThumbnailChangeDialo
 
     private void getComics() {
         getProgressBarHelper().showProgressBar();
-        ComicsResultService mCompanyService = new ComicsResultService(BaseActivity.REST_ADAPTER);
+        ComicsResultService mComicsResultService = new ComicsResultService(BaseActivity.REST_ADAPTER);
         ErrorEvent errorEvent = new ErrorEvent(getResources().getString(R.string.get_comics_request_failure));
-        mCompanyService.getComicsResultRequest(new ComicsResultEvent(errorEvent));
+        mComicsResultService.getComicsResultRequest(new ComicsResultEvent(errorEvent));
     }
 
     public void onEventMainThread(ComicsResultEvent event) {
@@ -104,8 +111,10 @@ public class ComicsFragment extends BaseFragment implements ThumbnailChangeDialo
         getProgressBarHelper().hideProgressBar();
     }
 
-    private void setComics(List<Comic> comics) {
-        final ComicsAdapter mComicsAdapter = new ComicsAdapter(getContext(), comics, this);
+    private void setComics(final List<Comic> comics) {
+        downloadCustomThumbnailsFromDropbox(comics);
+
+        mComicsAdapter = new ComicsAdapter(getContext(), comics, this);
         mComicsList.setAdapter(mComicsAdapter);
         mComicsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -115,6 +124,29 @@ public class ComicsFragment extends BaseFragment implements ThumbnailChangeDialo
         });
 
         mComicsAdapter.notifyDataSetChanged();
+    }
+
+    private void downloadCustomThumbnailsFromDropbox(final List<Comic> comics) {
+        Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (Comic comic : comics) {
+                    final String customThumbnailDirectoryPath = DROPBOX_START_FOLDER_PATH + comic.getId() + "/";
+                    String finalThumbnailName = CUSTOM_THUMBNAIL_NAME + comic.getId() + CUSTOM_THUMBNAIL_EXTENSION;
+
+                    DownloadComicCustomThumbnail download = new DownloadComicCustomThumbnail(
+                            getContext(),
+                            mDropboxHelper.getDBApi(),
+                            customThumbnailDirectoryPath,
+                            finalThumbnailName,
+                            comic.getThumbnail()
+                    );
+
+                    download.execute();
+                }
+            }
+        });
     }
 
     private void goToComicDetailsFragment(Comic comic) {
@@ -156,8 +188,9 @@ public class ComicsFragment extends BaseFragment implements ThumbnailChangeDialo
 
     private Intent initialiseCameraForImageResult(Comic comic) {
 
-        String customThumbnailName = CUSTOM_THUMBNAIL_NAME + CUSTOM_THUMBNAIL_EXTENSION;
-        String outPath = new File(Environment.getExternalStorageDirectory() + "/" + comic.getId() + "/", customThumbnailName).getPath();
+        String finalThumbnailName = CUSTOM_THUMBNAIL_NAME + comic.getId() + CUSTOM_THUMBNAIL_EXTENSION;
+
+        String outPath = new File(Environment.getExternalStorageDirectory() + "/" + comic.getId() + "/", finalThumbnailName).getPath();
         File outFile = new File(outPath);
         mLocalPhotoFullPath = outFile.toString();
         Uri outuri = Uri.fromFile(outFile);

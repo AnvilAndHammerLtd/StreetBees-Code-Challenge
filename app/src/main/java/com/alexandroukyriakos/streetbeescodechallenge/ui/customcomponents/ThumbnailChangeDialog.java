@@ -3,15 +3,11 @@ package com.alexandroukyriakos.streetbeescodechallenge.ui.customcomponents;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 
 import com.alexandroukyriakos.streetbeescodechallenge.ComicUtil;
 import com.alexandroukyriakos.streetbeescodechallenge.R;
 import com.alexandroukyriakos.streetbeescodechallenge.models.Comic;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 public class ThumbnailChangeDialog {
     private final Context mContext;
@@ -55,23 +51,7 @@ public class ThumbnailChangeDialog {
         header.setTextColorResId(R.color.thumbnail_change_dialog_header_text);
         header.setBackgroundResource(R.color.thumbnail_change_dialog_header_background);
         header.setDividerColorResId(R.color.thumbnail_change_dialog_header_divider);
-
-        Picasso.with(mContext).load(ComicUtil.getComicThumbnailPath(mContext, comic)).into(new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                header.setIcon(bitmap);
-            }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-                header.setIcon(R.drawable.comic_thumbnail_placeholder);
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-            }
-        });
-
+        ComicUtil.loadComicThumbnail(mContext, comic, header.getIconImageView());
         return header;
     }
 }

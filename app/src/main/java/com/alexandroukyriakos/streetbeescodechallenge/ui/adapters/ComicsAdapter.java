@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.alexandroukyriakos.streetbeescodechallenge.ComicUtil;
 import com.alexandroukyriakos.streetbeescodechallenge.R;
-import com.alexandroukyriakos.streetbeescodechallenge.UiUtil;
 import com.alexandroukyriakos.streetbeescodechallenge.models.Comic;
 import com.alexandroukyriakos.streetbeescodechallenge.ui.customcomponents.ThumbnailChangeDialog;
 
@@ -71,7 +70,7 @@ public class ComicsAdapter extends BaseAdapter {
     }
 
     private void setViewsValues(ViewHolder viewHolder, final Comic comic) {
-        setComicThumbnail(comic, viewHolder);
+        ComicUtil.loadComicThumbnail(mContext, comic, viewHolder.thumbnail);
         viewHolder.title.setText(comic.getTitle());
 
         viewHolder.thumbnail.setOnClickListener(new View.OnClickListener() {
@@ -80,14 +79,6 @@ public class ComicsAdapter extends BaseAdapter {
                 mThumbnailChangeDialog.show(comic, mThumbnailChangeDialogCallback);
             }
         });
-    }
-
-    private void setComicThumbnail(Comic comic, ViewHolder viewHolder) {
-        UiUtil.loadImageInto(
-                mContext,
-                ComicUtil.getComicThumbnailPath(mContext, comic),
-                R.drawable.comic_thumbnail_placeholder,
-                viewHolder.thumbnail);
     }
 
     private class ViewHolder {

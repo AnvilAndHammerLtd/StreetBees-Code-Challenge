@@ -1,10 +1,10 @@
 
 package com.alexandroukyriakos.streetbeescodechallenge.models;
 
-import javax.annotation.Generated;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class Thumbnail {
@@ -15,6 +15,16 @@ public class Thumbnail {
     @SerializedName("extension")
     @Expose
     private String extension;
+
+    private transient String customThumbnail = null;
+
+    public String getCustomThumbnail() {
+        return customThumbnail;
+    }
+
+    public void setCustomThumbnail(String customThumbnail) {
+        this.customThumbnail = customThumbnail;
+    }
 
     /**
      * @return The path

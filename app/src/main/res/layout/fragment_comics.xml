@@ -13,18 +13,10 @@
         android:padding="@dimen/margin_small"
         tools:listitem="@layout/item_comic" />
 
-    <LinearLayout
+    <include
         android:id="@id/marvel_copyrights_container"
+        layout="@layout/include_copyrights"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="@string/marvel_api_copyrights" />
-    </LinearLayout>
-
+        android:layout_alignParentBottom="true" />
 </RelativeLayout>

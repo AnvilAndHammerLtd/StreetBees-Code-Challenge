@@ -44,8 +44,6 @@ public class ComicsFragment extends BaseFragment implements
         UploadComicPicture.UploadComicPictureCallback {
     public static final String TAG = ComicsFragment.class.getName();
     private static final int CAMERA_IMAGE_CAPTURE_REQUEST_CODE = 1;
-    private static final String EXTRA_COMIC = "COMIC";
-    private static final String EXTRA_LOCAL_PHOTO_FULL_PATH = "LOCAL_PHOTO_FULL_PATH";
     private ListView mComicsList;
     private DropboxHelper mDropboxHelper;
 
@@ -112,7 +110,6 @@ public class ComicsFragment extends BaseFragment implements
     }
 
     private void setComics(final List<Comic> comics) {
-        downloadCustomThumbnailsFromDropbox(comics);
 
         mComicsAdapter = new ComicsAdapter(getContext(), comics, this);
         mComicsList.setAdapter(mComicsAdapter);
@@ -122,8 +119,9 @@ public class ComicsFragment extends BaseFragment implements
                 goToComicDetailsFragment(mComicsAdapter.getItem(position));
             }
         });
-
         mComicsAdapter.notifyDataSetChanged();
+
+        downloadCustomThumbnailsFromDropbox(comics);
     }
 
     private void downloadCustomThumbnailsFromDropbox(final List<Comic> comics) {
@@ -233,14 +231,30 @@ public class ComicsFragment extends BaseFragment implements
     }
 
     @Override
-    public void onDownloadComicPicture(Comic comic) {
+    public void onDownloadComicPictureStart(Comic comic) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mComicsAdapter != null) {
+                    mComicsAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onDownloadComicPictureProgressUpdate(int percent, Comic comic) {
+    }
+
+    @Override
+    public void onDownloadComicPictureFinished(boolean success, Comic comic) {
         if (mComicsAdapter != null) {
             mComicsAdapter.notifyDataSetChanged();
         }
     }
 
     @Override
-    public void onUploadComicPicture(Comic comic) {
+    public void onUploadComicPictureFinished(Comic comic) {
         if (mComicsAdapter != null) {
             mComicsAdapter.notifyDataSetChanged();
         }

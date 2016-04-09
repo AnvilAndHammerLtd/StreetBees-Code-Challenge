@@ -51,29 +51,32 @@ import java.util.ArrayList;
  * control for an app that downloads a file from Dropbox.
  */
 
-public abstract class DownloadPicture extends AsyncTask<Void, Long, Boolean> {
-
+public class DownloadPicture extends AsyncTask<Void, Long, Boolean> {
     private Context mContext;
     private DropboxAPI<?> mApi;
     private String mPath;
     private final String mImageFileName;
+    private final DownloadPictureCallback mDownloadPictureCallback;
+
     private FileOutputStream mFos;
+    private Long mFileLen;
     private String mErrorMsg;
     private String mCachePath;
 
     public DownloadPicture(Context context, DropboxAPI<?> api,
-                           String dropboxPath, String imageFileName) {
+                           String dropboxPath, String imageFileName, DownloadPictureCallback downloadPictureCallback) {
         // We set the context this way so we don't accidentally leak activities
         mContext = context.getApplicationContext();
         mImageFileName = imageFileName;
         mApi = api;
         mPath = dropboxPath;
+        mDownloadPictureCallback = downloadPictureCallback;
+        mDownloadPictureCallback.onDownloadPictureStart();
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
         try {
-
             // Get the metadata for a directory
             Entry dirent = mApi.metadata(mPath, 1000, null, true, null);
 
@@ -100,6 +103,7 @@ public abstract class DownloadPicture extends AsyncTask<Void, Long, Boolean> {
 
             Entry ent = thumbs.get(0);
             String path = ent.path;
+            mFileLen = ent.bytes;
 
             mCachePath = mContext.getCacheDir().getAbsolutePath() + "/" + mImageFileName;
             try {
@@ -163,17 +167,26 @@ public abstract class DownloadPicture extends AsyncTask<Void, Long, Boolean> {
 
     @Override
     protected void onProgressUpdate(Long... progress) {
+        int percent = (int) (100.0 * (double) progress[0] / mFileLen + 0.5);
+        mDownloadPictureCallback.onDownloadPictureProgressUpdate(percent);
     }
 
     @Override
     protected void onPostExecute(Boolean result) {
         if (result) {
-            onDownloadPicture(mCachePath);
+            mDownloadPictureCallback.onDownloadPictureFinish(true, mCachePath);
         } else {
             // Couldn't download it, so show an error
             Log.w("kiki", "mErrorMsg when trying to download custom comic thumbnail: " + mErrorMsg);
+            mDownloadPictureCallback.onDownloadPictureFinish(false, null);
         }
     }
 
-    protected abstract void onDownloadPicture(String cachePath);
+    public interface DownloadPictureCallback {
+        void onDownloadPictureStart();
+
+        void onDownloadPictureProgressUpdate(int percent);
+
+        void onDownloadPictureFinish(boolean success, String cachePath);
+    }
 }

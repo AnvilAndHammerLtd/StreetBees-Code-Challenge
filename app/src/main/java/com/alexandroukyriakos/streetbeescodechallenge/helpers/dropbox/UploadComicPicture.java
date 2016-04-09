@@ -21,12 +21,12 @@ public class UploadComicPicture extends UploadPicture {
     }
 
     @Override
-    public void onUploadPicture(String imagePath) {
+    public void onUploadPictureFinished(String imagePath) {
         mComic.getThumbnail().setCustomThumbnail(imagePath);
-        mUploadComicPictureCallback.onUploadComicPicture(mComic);
+        mUploadComicPictureCallback.onUploadComicPictureFinished(mComic);
     }
 
     public interface UploadComicPictureCallback {
-        void onUploadComicPicture(Comic comic);
+        void onUploadComicPictureFinished(Comic comic);
     }
 }

@@ -17,14 +17,7 @@ public class Thumbnail {
     private String extension;
 
     private transient String customThumbnail = null;
-
-    public String getCustomThumbnail() {
-        return customThumbnail;
-    }
-
-    public void setCustomThumbnail(String customThumbnail) {
-        this.customThumbnail = customThumbnail;
-    }
+    private transient boolean hasCustomThumbnail = false;
 
     /**
      * @return The path
@@ -54,4 +47,19 @@ public class Thumbnail {
         this.extension = extension;
     }
 
+    public String getCustomThumbnail() {
+        return customThumbnail;
+    }
+
+    public void setCustomThumbnail(String customThumbnail) {
+        this.customThumbnail = customThumbnail;
+    }
+
+    public void hasCustomThumbnail(boolean hasCustomThumbnail) {
+        this.hasCustomThumbnail = hasCustomThumbnail;
+    }
+
+    public boolean hasCustomThumbnail() {
+        return hasCustomThumbnail;
+    }
 }

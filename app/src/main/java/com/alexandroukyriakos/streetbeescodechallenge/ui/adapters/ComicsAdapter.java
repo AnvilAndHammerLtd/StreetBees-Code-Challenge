@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.alexandroukyriakos.streetbeescodechallenge.ComicUtil;
@@ -66,13 +67,20 @@ public class ComicsAdapter extends BaseAdapter {
     }
 
     private void bindViews(View convertView, ViewHolder viewHolder) {
-        viewHolder.thumbnail = (ImageView) convertView.findViewById(R.id.image);
+        viewHolder.thumbnail = (ImageView) convertView.findViewById(R.id.thumbnail);
+        viewHolder.thumbnailProgress = (ProgressBar) convertView.findViewById(R.id.progress);
         viewHolder.title = (TextView) convertView.findViewById(R.id.title);
     }
 
     private void setViewsValues(ViewHolder viewHolder, final Comic comic) {
         ComicUtil.loadComicThumbnail(mContext, comic, viewHolder.thumbnail);
         viewHolder.title.setText(comic.getTitle());
+
+        if (comic.getThumbnail().hasCustomThumbnail() && comic.getThumbnail().getCustomThumbnail() == null) {
+            viewHolder.thumbnailProgress.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.thumbnailProgress.setVisibility(View.GONE);
+        }
 
         viewHolder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +91,7 @@ public class ComicsAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
+        ProgressBar thumbnailProgress;
         ImageView thumbnail;
         TextView title;
     }

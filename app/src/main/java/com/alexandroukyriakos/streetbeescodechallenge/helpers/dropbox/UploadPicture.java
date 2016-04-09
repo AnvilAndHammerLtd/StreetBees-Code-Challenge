@@ -66,7 +66,7 @@ public abstract class UploadPicture extends AsyncTask<Void, Long, Boolean> {
 
     private String mErrorMsg;
 
-    public abstract void onUploadPicture(String imagePath);
+    public abstract void onUploadPictureFinished(String imagePath);
 
 
     public UploadPicture(Context context, DropboxAPI<?> api, String dropboxPath,
@@ -175,7 +175,7 @@ public abstract class UploadPicture extends AsyncTask<Void, Long, Boolean> {
         mDialog.dismiss();
         if (result) {
             showToast("Image successfully uploaded");
-            onUploadPicture(mFile.getPath());
+            onUploadPictureFinished(mFile.getPath());
         } else {
             showToast(mErrorMsg);
         }

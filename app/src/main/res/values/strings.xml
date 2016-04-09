@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">StreetBeesCodeChallenge</string>
+    <string name="version">v1.1</string>
     <string name="dot">.</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -13,6 +14,5 @@
     <string name="ask_to_change_thumbnail_positive_btn">@string/yes</string>
     <string name="ask_to_change_thumbnail_negative_btn">@string/no</string>
     <string name="header_content_description">cover image</string>
-    <string name="version">v1.0</string>
 
 </resources>

@@ -12,6 +12,7 @@ import com.alexandroukyriakos.streetbeescodechallenge.ComicUtil;
 import com.alexandroukyriakos.streetbeescodechallenge.R;
 import com.alexandroukyriakos.streetbeescodechallenge.models.Comic;
 import com.alexandroukyriakos.streetbeescodechallenge.ui.customcomponents.ThumbnailChangeDialog;
+import com.alexandroukyriakos.streetbeescodechallenge.ui.customcomponents.ThumbnailChangeDialog.ThumbnailChangeDialogCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ public class ComicsAdapter extends BaseAdapter {
 
     private ThumbnailChangeDialog.ThumbnailChangeDialogCallback mThumbnailChangeDialogCallback;
 
-    public ComicsAdapter(Context context, List<Comic> comics, ThumbnailChangeDialog.ThumbnailChangeDialogCallback thumbnailChangeDialogCallback) {
+    public ComicsAdapter(Context context, List<Comic> comics, ThumbnailChangeDialogCallback thumbnailChangeDialogCallback) {
         mContext = context;
         mComics = comics;
         mThumbnailChangeDialogCallback = thumbnailChangeDialogCallback;

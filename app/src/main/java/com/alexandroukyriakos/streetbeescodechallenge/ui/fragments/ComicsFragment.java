@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +18,11 @@ import android.widget.ListView;
 
 import com.alexandroukyriakos.streetbeescodechallenge.R;
 import com.alexandroukyriakos.streetbeescodechallenge.UiUtil;
-import com.alexandroukyriakos.streetbeescodechallenge.helpers.dropbox.DownloadComicPicture;
-import com.alexandroukyriakos.streetbeescodechallenge.helpers.dropbox.DropboxHelper;
-import com.alexandroukyriakos.streetbeescodechallenge.helpers.dropbox.UploadPicture;
 import com.alexandroukyriakos.streetbeescodechallenge.events.ComicsResultEvent;
 import com.alexandroukyriakos.streetbeescodechallenge.events.ErrorEvent;
+import com.alexandroukyriakos.streetbeescodechallenge.helpers.dropbox.DownloadComicPicture;
+import com.alexandroukyriakos.streetbeescodechallenge.helpers.dropbox.DropboxHelper;
+import com.alexandroukyriakos.streetbeescodechallenge.helpers.dropbox.UploadComicPicture;
 import com.alexandroukyriakos.streetbeescodechallenge.helpers.progressbar.BaseProgressBarHelper;
 import com.alexandroukyriakos.streetbeescodechallenge.models.Comic;
 import com.alexandroukyriakos.streetbeescodechallenge.services.ComicsResultService;
@@ -41,9 +40,12 @@ import de.greenrobot.event.EventBus;
  */
 public class ComicsFragment extends BaseFragment implements
         ThumbnailChangeDialog.ThumbnailChangeDialogCallback,
-        DownloadComicPicture.DownloadComicPictureCallback {
+        DownloadComicPicture.DownloadComicPictureCallback,
+        UploadComicPicture.UploadComicPictureCallback {
     public static final String TAG = ComicsFragment.class.getName();
     private static final int CAMERA_IMAGE_CAPTURE_REQUEST_CODE = 1;
+    private static final String EXTRA_COMIC = "COMIC";
+    private static final String EXTRA_LOCAL_PHOTO_FULL_PATH = "LOCAL_PHOTO_FULL_PATH";
     private ListView mComicsList;
     private DropboxHelper mDropboxHelper;
 
@@ -53,7 +55,7 @@ public class ComicsFragment extends BaseFragment implements
 
     /*
     custom thumbnails directory path
-    /streetbeesChallengeTest/[folder_with_the_comic_id_as_a_name]/currentCustomThumbnail.jpg
+    /streetbeesChallengeTest/[folder_with_the_comic_id_as_a_name]/currentCustomThumbnail[comicId][CUSTOM_THUMBNAIL_EXTENSION]
     */
     public static final String DROPBOX_START_FOLDER_PATH = "/streetbeesCodeChallenge/";
     public static final String CUSTOM_THUMBNAIL_NAME = "currentCustomThumbnail";
@@ -142,14 +144,6 @@ public class ComicsFragment extends BaseFragment implements
                             ComicsFragment.this
                     );
 
-//                    DownloadPicture download = new DownloadPicture(
-//                            getContext(),
-//                            mDropboxHelper.getDBApi(),
-//                            customThumbnailDirectoryPath,
-//                            finalThumbnailName,
-//                            comic.getThumbnail()
-//                    );
-
                     download.execute();
                 }
             }
@@ -193,8 +187,11 @@ public class ComicsFragment extends BaseFragment implements
         }
     }
 
+    private Comic mCurrentComic;
+
     private Intent initialiseCameraForImageResult(Comic comic) {
         String finalThumbnailName = CUSTOM_THUMBNAIL_NAME + comic.getId() + CUSTOM_THUMBNAIL_EXTENSION;
+        mCurrentComic = comic;
 
         String outPath = new File(Environment.getExternalStorageDirectory() + "/" + comic.getId() + "/", finalThumbnailName).getPath();
         File outFile = new File(outPath);
@@ -207,7 +204,6 @@ public class ComicsFragment extends BaseFragment implements
     }
 
     private void openCameraForImageResult(Intent intent) {
-        Log.i(TAG, "Importing New Picture: " + mLocalPhotoFullPath);
         try {
             startActivityForResult(intent, CAMERA_IMAGE_CAPTURE_REQUEST_CODE);
         } catch (ActivityNotFoundException e) {
@@ -223,12 +219,14 @@ public class ComicsFragment extends BaseFragment implements
             case Activity.RESULT_OK:
                 File file = new File(mLocalPhotoFullPath);
 
-                UploadPicture upload =
-                        new UploadPicture(
+                UploadComicPicture upload =
+                        new UploadComicPicture(
                                 getContext(),
                                 mDropboxHelper.getDBApi(),
                                 mDropboxPhotoDirectoryFullPath,
-                                file);
+                                file,
+                                mCurrentComic,
+                                this);
                 upload.execute();
                 break;
         }
@@ -236,6 +234,13 @@ public class ComicsFragment extends BaseFragment implements
 
     @Override
     public void onDownloadComicPicture(Comic comic) {
+        if (mComicsAdapter != null) {
+            mComicsAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onUploadComicPicture(Comic comic) {
         if (mComicsAdapter != null) {
             mComicsAdapter.notifyDataSetChanged();
         }

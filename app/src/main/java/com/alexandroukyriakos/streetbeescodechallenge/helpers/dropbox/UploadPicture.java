@@ -53,7 +53,7 @@ import java.io.FileNotFoundException;
  * typical exception handling and flow of control for an app that uploads a
  * file from Dropbox.
  */
-public class UploadPicture extends AsyncTask<Void, Long, Boolean> {
+public abstract class UploadPicture extends AsyncTask<Void, Long, Boolean> {
 
     private DropboxAPI<?> mApi;
     private String mPath;
@@ -65,6 +65,8 @@ public class UploadPicture extends AsyncTask<Void, Long, Boolean> {
     private final ProgressDialog mDialog;
 
     private String mErrorMsg;
+
+    public abstract void onUploadPicture(String imagePath);
 
 
     public UploadPicture(Context context, DropboxAPI<?> api, String dropboxPath,
@@ -173,6 +175,7 @@ public class UploadPicture extends AsyncTask<Void, Long, Boolean> {
         mDialog.dismiss();
         if (result) {
             showToast("Image successfully uploaded");
+            onUploadPicture(mFile.getPath());
         } else {
             showToast(mErrorMsg);
         }

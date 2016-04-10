@@ -231,11 +231,25 @@ public class ComicsFragment extends BaseFragment implements
     }
 
     @Override
+    public void onUploadComicPictureFinished(boolean success, Comic comic) {
+        if (mComicsAdapter != null) {
+            /*
+            this removes the progress bar from the comic thumbnail
+            */
+            mComicsAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
     public void onDownloadComicPictureStart(Comic comic) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (mComicsAdapter != null) {
+                    /*
+                     so we can show the progress dialog on the thumbnail until  it
+                     gets downloaded
+                      */
                     mComicsAdapter.notifyDataSetChanged();
                 }
             }
@@ -244,17 +258,13 @@ public class ComicsFragment extends BaseFragment implements
 
     @Override
     public void onDownloadComicPictureProgressUpdate(int percent, Comic comic) {
-    }
-
-    @Override
-    public void onDownloadComicPictureFinished(boolean success, Comic comic) {
         if (mComicsAdapter != null) {
             mComicsAdapter.notifyDataSetChanged();
         }
     }
 
     @Override
-    public void onUploadComicPictureFinished(Comic comic) {
+    public void onDownloadComicPictureFinished(boolean success, Comic comic) {
         if (mComicsAdapter != null) {
             mComicsAdapter.notifyDataSetChanged();
         }

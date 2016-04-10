@@ -53,24 +53,22 @@ import java.io.FileNotFoundException;
  * typical exception handling and flow of control for an app that uploads a
  * file from Dropbox.
  */
-public abstract class UploadPicture extends AsyncTask<Void, Long, Boolean> {
+public class UploadPicture extends AsyncTask<Void, Long, Boolean> {
 
+    private Context mContext;
     private DropboxAPI<?> mApi;
     private String mPath;
     private File mFile;
+    private final UploadPictureCallback mUploadPictureCallback;
 
     private long mFileLen;
     private UploadRequest mRequest;
-    private Context mContext;
-    private final ProgressDialog mDialog;
+    private final ProgressDialog mProgressDialog;
 
     private String mErrorMsg;
 
-    public abstract void onUploadPictureFinished(String imagePath);
-
-
     public UploadPicture(Context context, DropboxAPI<?> api, String dropboxPath,
-                         File file) {
+                         File file, UploadPictureCallback uploadPictureCallback) {
         // We set the context this way so we don't accidentally leak activities
         mContext = context.getApplicationContext();
 
@@ -78,20 +76,29 @@ public abstract class UploadPicture extends AsyncTask<Void, Long, Boolean> {
         mApi = api;
         mPath = dropboxPath;
         mFile = file;
+        mUploadPictureCallback = uploadPictureCallback;
 
-        mDialog = new ProgressDialog(context);
-        mDialog.setMax(100);
-        mDialog.setMessage("Uploading " + file.getName());
-        mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        mDialog.setProgress(0);
-        mDialog.setButton(ProgressDialog.BUTTON_POSITIVE, "Cancel", new OnClickListener() {
+        mProgressDialog = createUploadProgressDialog(context, file);
+        mProgressDialog.show();
+
+        mUploadPictureCallback.onUploadPictureStart();
+    }
+
+    private ProgressDialog createUploadProgressDialog(Context context, File file) {
+        ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setMax(100);
+        progressDialog.setMessage("Uploading " + file.getName());
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setProgress(0);
+        progressDialog.setButton(ProgressDialog.BUTTON_POSITIVE, "Cancel", new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // This will cancel the putFile operation
                 mRequest.abort();
             }
         });
-        mDialog.show();
+
+        return progressDialog;
     }
 
     @Override
@@ -167,22 +174,32 @@ public abstract class UploadPicture extends AsyncTask<Void, Long, Boolean> {
     @Override
     protected void onProgressUpdate(Long... progress) {
         int percent = (int) (100.0 * (double) progress[0] / mFileLen + 0.5);
-        mDialog.setProgress(percent);
+        mProgressDialog.setProgress(percent);
+        mUploadPictureCallback.onUploadPictureProgressUpdate(percent);
     }
 
     @Override
     protected void onPostExecute(Boolean result) {
-        mDialog.dismiss();
+        mProgressDialog.dismiss();
         if (result) {
             showToast("Image successfully uploaded");
-            onUploadPictureFinished(mFile.getPath());
+            mUploadPictureCallback.onUploadPictureFinished(result, mFile.getPath());
         } else {
             showToast(mErrorMsg);
+            mUploadPictureCallback.onUploadPictureFinished(result, null);
         }
     }
 
     private void showToast(String msg) {
         Toast error = Toast.makeText(mContext, msg, Toast.LENGTH_LONG);
         error.show();
+    }
+
+    public interface UploadPictureCallback {
+        void onUploadPictureStart();
+
+        void onUploadPictureProgressUpdate(int percent);
+
+        void onUploadPictureFinished(boolean success, String imagePath);
     }
 }
